@@ -21,7 +21,7 @@ const legalLinks = [
 export function Footer() {
   return (
     <footer className="border-t bg-card">
-      <div className="mx-auto max-w-7xl container-px py-14 lg:py-20">
+      <div className="mx-auto max-w-7xl container-px py-14 lg:py-5">
         <div className="grid gap-10 lg:grid-cols-12">
           {/* Brand */}
           <div className="lg:col-span-4">
@@ -71,7 +71,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
               Navigasi
             </h3>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-4 grid grid-cols-2 gap-x-1 gap-y-2.5">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link
