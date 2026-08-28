@@ -44,6 +44,12 @@ const values = [
     description:
       'Lingkungan yang terjaga kebersihannya dengan cleaning service untuk tipe Executive.',
   },
+  {
+    icon: ArrowRight,
+    title: 'Lokasi Strategis',
+    description:
+      'Lokasi yang strategis di Makassar, memudahkan akses ke berbagai fasilitas kota.',
+  },
 ];
 
 export default function TentangPage() {
