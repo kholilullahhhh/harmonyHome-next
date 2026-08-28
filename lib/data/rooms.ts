@@ -26,8 +26,8 @@ export const siteConfig = {
   stats: {
     totalRooms: '20+',
     roomTypes: 'Standard & Premium',
-    startingPrice: 'Rp1.500.000',
-    startingPricePerMonth: 'Rp1.500.000/bulan',
+    startingPrice: 'Rp1.700.000',
+    startingPricePerMonth: 'Rp1.700.000/bulan',
     location: 'Makassar',
   },
 } as const;
@@ -84,8 +84,8 @@ export const rooms: Room[] = [
     slug: 'standard',
     name: 'Standard Room',
     type: 'TYPE A — STANDARD',
-    price: 1500000,
-    priceLabel: 'Rp1.500.000 / bulan',
+    price: 1700000,
+    priceLabel: 'Rp1.700.000 / bulan',
     size: '3m × 4m',
     capacity: 1,
     status: 'available',

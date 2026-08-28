@@ -60,7 +60,7 @@ export function LocationSection() {
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {nearbyPlaces.map((place) => {
               const Icon =
-                (LucideIcons as Record<string, LucideIcons.LucideIcon>)[
+                (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
                   place.icon
                 ] ?? MapPin;
               return (

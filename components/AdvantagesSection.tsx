@@ -15,7 +15,7 @@ export function AdvantagesSection() {
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {advantages.map((a) => {
             const Icon =
-              (LucideIcons as Record<string, LucideIcons.LucideIcon>)[
+              (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
                 a.icon
               ] ?? LucideIcons.CheckCircle2;
             return (

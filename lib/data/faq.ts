@@ -30,24 +30,6 @@ export const faqItems: FAQItem[] = [
       'Untuk tipe Premium dan Executive Room, kamar mandi berada di dalam kamar untuk privasi penuh. Untuk Standard Room, kamar mandi bersama tersedia di setiap lantai.',
   },
   {
-    id: 'parking',
-    question: 'Apakah tersedia tempat parkir?',
-    answer:
-      'Ya, area parkir aman tersedia untuk seluruh penghuni Harmony Home, baik untuk sepeda motor maupun mobil.',
-  },
-  {
-    id: 'min-lease',
-    question: 'Berapa minimal masa sewa?',
-    answer:
-      'Minimal masa sewa di Harmony Home adalah 1 bulan. Tersedia juga opsi sewa 3 bulan dan 6 bulan dengan diskon khusus.',
-  },
-  {
-    id: 'couple',
-    question: 'Apakah boleh membawa pasangan?',
-    answer:
-      'Harmony Home mengutamakan kenyamanan dan privasi seluruh penghuni. Tamu diperbolehkan berkunjung hingga pukul 22.00, namun tidak diperbolehkan menginap selain penghuni terdaftar.',
-  },
-  {
     id: 'booking-process',
     question: 'Bagaimana proses booking?',
     answer:

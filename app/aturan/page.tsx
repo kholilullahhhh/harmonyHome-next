@@ -26,7 +26,7 @@ export default function AturanPage() {
           <div className="grid gap-6 sm:grid-cols-2">
             {ruleGroups.map((group) => {
               const Icon =
-                (LucideIcons as Record<string, LucideIcons.LucideIcon>)[
+                (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
                   group.icon
                 ] ?? LucideIcons.ScrollText;
               return (
