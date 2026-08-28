@@ -4,24 +4,24 @@ export const siteConfig = {
   description:
     'Kost eksklusif dengan fasilitas lengkap, lingkungan nyaman, dan lokasi strategis untuk mendukung aktivitasmu setiap hari.',
   address: {
-    street: 'Jl. Bunga Melati No. 123',
+    street: 'Harmony@home, Jl. Perintis Kemerdekaan, Tamalanrea Indah',
     city: 'Makassar',
     province: 'Sulawesi Selatan',
-    postalCode: '90111',
-    full: 'Jl. Bunga Melati No. 123, Makassar, Sulawesi Selatan',
+    postalCode: '90245',
+    full: 'Harmony@home, Jl. Perintis Kemerdekaan, Tamalanrea Indah, Kec. Tamalanrea, Kota Makassar, Sulawesi Selatan',
   },
   contact: {
     whatsapp: '+6281234567890',
     whatsappDisplay: '+62 812-3456-7890',
     whatsappLink: 'https://wa.me/6281234567890',
     email: 'info@harmonyhome.id',
-    instagram: '@harmonyhome.id',
-    instagramLink: 'https://instagram.com/harmonyhome.id',
+    instagram: '@harmony.aathome',
+    instagramLink: 'https://instagram.com/harmony.aathome',
   },
   maps: {
     embedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3973.7!2d119.4!3d-5.1!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsOwMDYnMDAuMCJTIDExOcOwMjQnMDAuMCJF!5e0!3m2!1sen!2sid!4v1700000000000',
-    linkUrl: 'https://maps.google.com/?q=Makassar',
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3973.8231629682127!2d119.47917580000001!3d-5.132164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dbefd8bac73a109%3A0x40fa263265eb929e!2sHarmony%40home!5e0!3m2!1sid!2sid!4v1787893789758!5m2!1sid!2sid',
+    linkUrl: 'https://maps.app.goo.gl/7CanPa16jv5fCCCVA',
   },
   stats: {
     totalRooms: '20+',
