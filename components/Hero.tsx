@@ -1,15 +1,15 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowRight, Check } from 'lucide-react';
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight, Check } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { siteConfig } from '@/lib/data/rooms';
+import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/data/rooms";
 
 const highlights = [
-  'Kamar Eksklusif',
-  'Fasilitas Lengkap',
-  'Lingkungan Nyaman',
-  'Lokasi Strategis',
+  "Kamar Eksklusif",
+  "Fasilitas Lengkap",
+  "Lingkungan Nyaman",
+  "Lokasi Strategis",
 ];
 
 export function Hero() {
@@ -64,9 +64,9 @@ export function Hero() {
             {highlights.map((h) => (
               <li
                 key={h}
-                className="flex items-center gap-1.5 text-sm text-white/85"
+                className="flex items-center gap-1.5 text-sm !text-white"
               >
-                <Check className="h-4 w-4 text-emerald-400" />
+                <Check className="h-4 w-4 !text-emerald-400" />
                 {h}
               </li>
             ))}
