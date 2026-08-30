@@ -48,4 +48,4 @@ Run `typecheck` and `lint` after changes. There are no tests.
 - `npx prisma generate` can fail with `EPERM rename ... query_engine-windows.dll.node` on Windows when another process holds the DLL — kill node processes, then retry. Not a code problem.
 - If first request to a route hangs for ~10s, it's next dev compiling on demand (cold compile), not a hang.
 - Prisma pinned to **5.22.0**; `@next/swc-wasm-nodejs` pinned as `@next/swc-wasm-nodejs` 13.5.1. Do not bump these without checking Next 13.5/TS 5.2 compatibility.
-- Deployed to Netlify via `netlify.toml` (`npx next build`, `@netlify/plugin-nextjs`, publishes `.next`).
+- Deployed to Netlify via `netlify.toml` (`npx prisma generate && npx next build`, `@netlify/plugin-nextjs`, publishes `.next`). **`prisma generate` MUST run before `next build`** — `npm run build` already does this via the `prebuild` hook; `netlify.toml` also prepends it. If the generated client (`node_modules/.prisma/client`) is missing at build time, Next fails with `Error: Failed to collect page data for /api/admin/<x>/[id]` (the reported route varies per parallel worker; usually the first DB-backed API route).
