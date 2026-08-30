@@ -35,11 +35,16 @@ export function Gallery({ limit }: { limit?: number }) {
     setLightboxIndex(idx);
   };
 
-  const closeLightbox = () => setLightboxIndex(null);
-  const prev = () =>
-    setLightboxIndex((i) => (i === null ? i : (i - 1 + images.length) % images.length));
-  const next = () =>
-    setLightboxIndex((i) => (i === null ? i : (i + 1) % images.length));
+  const closeLightbox = React.useCallback(() => setLightboxIndex(null), []);
+  const prev = React.useCallback(
+    () =>
+      setLightboxIndex((i) => (i === null ? i : (i - 1 + images.length) % images.length)),
+    [images.length]
+  );
+  const next = React.useCallback(
+    () => setLightboxIndex((i) => (i === null ? i : (i + 1) % images.length)),
+    [images.length]
+  );
 
   React.useEffect(() => {
     if (lightboxIndex === null) return;
@@ -50,7 +55,7 @@ export function Gallery({ limit }: { limit?: number }) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [lightboxIndex, images.length]);
+  }, [lightboxIndex, images.length, prev, next, closeLightbox]);
 
   return (
     <>

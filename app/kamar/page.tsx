@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { PageHeader } from '@/components/PageHeader';
 import { RoomCard } from '@/components/RoomCard';
 import { CTASection } from '@/components/CTASection';
-import { rooms } from '@/lib/data/rooms';
+import { getPublicRooms } from '@/lib/db/public';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Pilihan Kamar',
@@ -12,7 +14,29 @@ export const metadata: Metadata = {
     'Tiga tipe kamar eksklusif di Harmony Home: Standard, Premium, dan Executive dengan fasilitas lengkap.',
 };
 
-export default function KamarPage() {
+export default async function KamarPage() {
+  const dbRooms = await getPublicRooms();
+
+  const rooms = dbRooms.map((r) => ({
+    id: parseInt(r.id.slice(-8), 16) || 0,
+    slug: r.slug,
+    name: r.name,
+    type: r.type,
+    price: r.price,
+    priceLabel: r.priceLabel || `Rp${r.price.toLocaleString('id-ID')} / bulan`,
+    size: r.size,
+    capacity: r.capacity,
+    status: r.status as 'available' | 'limited' | 'full',
+    availableCount: r.availableCount,
+    totalCount: r.totalCount,
+    shortDescription: r.shortDescription,
+    description: r.description,
+    facilities: r.facilities,
+    rules: r.rules,
+    paymentInfo: r.paymentInfo,
+    images: r.images,
+  }));
+
   return (
     <>
       <PageHeader
@@ -26,7 +50,7 @@ export default function KamarPage() {
           {rooms.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {rooms.map((room) => (
-                <RoomCard key={room.id} room={room} />
+                <RoomCard key={room.slug} room={room} />
               ))}
             </div>
           ) : (

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle2, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,13 +23,23 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import {
-  rooms,
-  formatPrice,
-  siteConfig,
-} from '@/lib/data/rooms';
 
-export function BookingForm() {
+interface RoomOption {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;
+}
+
+interface BookingFormProps {
+  rooms: RoomOption[];
+}
+
+function formatPrice(price: number): string {
+  return 'Rp' + price.toLocaleString('id-ID');
+}
+
+export function BookingForm({ rooms }: BookingFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -37,19 +48,19 @@ export function BookingForm() {
   const [phone, setPhone] = React.useState('');
   const [idNumber, setIdNumber] = React.useState('');
   const [address, setAddress] = React.useState('');
-  const [roomSlug, setRoomSlug] = React.useState(
+  const [roomId, setRoomId] = React.useState(
     searchParams.get('room') ?? ''
   );
-  const [roomNumber, setRoomNumber] = React.useState('');
   const [moveInDate, setMoveInDate] = React.useState('');
   const [duration, setDuration] = React.useState('1');
   const [notes, setNotes] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
 
-  const selectedRoom = rooms.find((r) => r.slug === roomSlug);
+  const selectedRoom = rooms.find((r) => r.id === roomId);
   const durationNum = parseInt(duration, 10) || 1;
   const total = selectedRoom ? selectedRoom.price * durationNum : 0;
+  const todayISO = new Date().toISOString().split('T')[0];
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -60,9 +71,7 @@ export function BookingForm() {
     if (!phone.trim()) e.phone = 'Nomor HP wajib diisi';
     else if (!/^[0-9+\-\s]{8,15}$/.test(phone))
       e.phone = 'Nomor HP tidak valid';
-    if (!idNumber.trim()) e.idNumber = 'Nomor identitas wajib diisi';
-    if (!address.trim()) e.address = 'Alamat wajib diisi';
-    if (!roomSlug) e.roomSlug = 'Pilih tipe kamar';
+    if (!roomId) e.roomId = 'Pilih tipe kamar';
     if (!moveInDate) e.moveInDate = 'Pilih tanggal masuk';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -72,17 +81,44 @@ export function BookingForm() {
     ev.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    // Simulasi pengiriman data booking — siap diintegrasikan dengan REST API.
-    await new Promise((r) => setTimeout(r, 1200));
-    const bookingId = `HH-2026-${String(Math.floor(1000 + Math.random() * 9000))}`;
-    const params = new URLSearchParams({
-      id: bookingId,
-      room: selectedRoom?.name ?? '',
-      name: name,
-      duration: String(durationNum),
-      total: String(total),
-    });
-    router.push(`/booking/success?${params.toString()}`);
+
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomId,
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          identityNumber: idNumber.trim() || undefined,
+          address: address.trim() || undefined,
+          startDate: moveInDate,
+          duration: durationNum,
+          notes: notes.trim() || undefined,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Gagal mengirim booking');
+      }
+
+      const params = new URLSearchParams({
+        id: data.data.id,
+        code: data.data.bookingCode,
+        room: data.data.roomName,
+        name: data.data.name,
+        duration: String(data.data.duration),
+        total: String(data.data.totalPrice),
+      });
+      router.push(`/booking/success?${params.toString()}`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Terjadi kesalahan saat mengirim booking.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -139,31 +175,23 @@ export function BookingForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="idNumber">Nomor Identitas (KTP/SIM)</Label>
+              <Label htmlFor="idNumber">Nomor Identitas (KTP/SIM) — opsional</Label>
               <Input
                 id="idNumber"
                 value={idNumber}
                 onChange={(e) => setIdNumber(e.target.value)}
                 placeholder="Masukkan nomor identitas"
-                aria-invalid={!!errors.idNumber}
               />
-              {errors.idNumber && (
-                <p className="text-xs text-destructive">{errors.idNumber}</p>
-              )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address">Alamat</Label>
+              <Label htmlFor="address">Alamat — opsional</Label>
               <Textarea
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Alamat domisili saat ini"
-                aria-invalid={!!errors.address}
               />
-              {errors.address && (
-                <p className="text-xs text-destructive">{errors.address}</p>
-              )}
             </div>
           </CardContent>
         </Card>
@@ -175,38 +203,30 @@ export function BookingForm() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="room">Tipe Kamar</Label>
-              <Select value={roomSlug} onValueChange={setRoomSlug}>
-                <SelectTrigger id="room" aria-invalid={!!errors.roomSlug}>
+              <Select value={roomId} onValueChange={setRoomId}>
+                <SelectTrigger id="room" aria-invalid={!!errors.roomId}>
                   <SelectValue placeholder="Pilih tipe kamar" />
                 </SelectTrigger>
                 <SelectContent>
                   {rooms.map((r) => (
-                    <SelectItem key={r.slug} value={r.slug}>
+                    <SelectItem key={r.id} value={r.id}>
                       {r.name} — {formatPrice(r.price)}/bln
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {errors.roomSlug && (
-                <p className="text-xs text-destructive">{errors.roomSlug}</p>
+              {errors.roomId && (
+                <p className="text-xs text-destructive">{errors.roomId}</p>
               )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="roomNumber">Nomor Kamar (opsional)</Label>
-                <Input
-                  id="roomNumber"
-                  value={roomNumber}
-                  onChange={(e) => setRoomNumber(e.target.value)}
-                  placeholder="Contoh: 2A-05"
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="moveInDate">Tanggal Masuk</Label>
                 <Input
                   id="moveInDate"
                   type="date"
+                  min={todayISO}
                   value={moveInDate}
                   onChange={(e) => setMoveInDate(e.target.value)}
                   aria-invalid={!!errors.moveInDate}
@@ -215,25 +235,24 @@ export function BookingForm() {
                   <p className="text-xs text-destructive">{errors.moveInDate}</p>
                 )}
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="duration">Durasi Sewa</Label>
+                <Select value={duration} onValueChange={setDuration}>
+                  <SelectTrigger id="duration">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 Bulan</SelectItem>
+                    <SelectItem value="3">3 Bulan</SelectItem>
+                    <SelectItem value="6">6 Bulan</SelectItem>
+                    <SelectItem value="12">12 Bulan</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="duration">Durasi Sewa</Label>
-              <Select value={duration} onValueChange={setDuration}>
-                <SelectTrigger id="duration">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 Bulan</SelectItem>
-                  <SelectItem value="3">3 Bulan</SelectItem>
-                  <SelectItem value="6">6 Bulan</SelectItem>
-                  <SelectItem value="12">12 Bulan</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="notes">Catatan</Label>
+              <Label htmlFor="notes">Catatan — opsional</Label>
               <Textarea
                 id="notes"
                 value={notes}
@@ -249,12 +268,12 @@ export function BookingForm() {
       <div className="lg:col-span-2">
         <Card className="sticky top-24 border-border/60">
           <CardHeader>
-            <CardTitle className="text-lg">Booking Summary</CardTitle>
+            <CardTitle className="text-lg">Ringkasan Booking</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-2.5">
               <span className="font-serif text-lg font-semibold">
-                {siteConfig.name}
+                Harmony Home
               </span>
             </div>
 

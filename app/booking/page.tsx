@@ -3,6 +3,9 @@ import { Suspense } from 'react';
 
 import { PageHeader } from '@/components/PageHeader';
 import { BookingForm } from '@/components/BookingForm';
+import { getPublicRooms } from '@/lib/db/public';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Booking Kamar',
@@ -10,7 +13,9 @@ export const metadata: Metadata = {
     'Ajukan booking kamar di Harmony Home. Isi data penghuni dan detail booking, pengelola akan menghubungi Anda dalam 1×24 jam.',
 };
 
-export default function BookingPage() {
+export default async function BookingPage() {
+  const rooms = await getPublicRooms();
+
   return (
     <>
       <PageHeader
@@ -28,7 +33,7 @@ export default function BookingPage() {
               </div>
             }
           >
-            <BookingForm />
+            <BookingForm rooms={rooms} />
           </Suspense>
         </div>
       </section>

@@ -3,8 +3,8 @@ import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 
 import { ThemeProvider } from '@/components/theme-provider';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import { SiteChrome } from '@/components/SiteChrome';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const playfair = Playfair_Display({
@@ -14,6 +14,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
   title: {
     default: 'Harmony Home — Kost Eksklusif dengan Hunian Nyaman',
     template: '%s | Harmony Home',
@@ -51,11 +52,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          <SiteChrome>{children}</SiteChrome>
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>

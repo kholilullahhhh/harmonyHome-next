@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CheckCircle2, Home, MessageCircle, Clock } from 'lucide-react';
+import { CheckCircle2, Home, Clock } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
-import { siteConfig, formatPrice } from '@/lib/data/rooms';
 
 export const metadata: Metadata = {
   title: 'Booking Berhasil',
@@ -15,6 +14,7 @@ export const metadata: Metadata = {
 interface SuccessPageProps {
   searchParams: {
     id?: string;
+    code?: string;
     room?: string;
     name?: string;
     duration?: string;
@@ -22,10 +22,14 @@ interface SuccessPageProps {
   };
 }
 
+function formatPrice(price: number): string {
+  return 'Rp' + price.toLocaleString('id-ID');
+}
+
 export default function BookingSuccessPage({
   searchParams,
 }: SuccessPageProps) {
-  const bookingId = searchParams.id ?? 'HH-2026-0001';
+  const bookingCode = searchParams.code ?? 'HH-XXXX-XXXX';
   const room = searchParams.room ?? 'Kamar';
   const duration = searchParams.duration ?? '1';
   const total = searchParams.total
@@ -51,9 +55,9 @@ export default function BookingSuccessPage({
             <div className="mt-8 rounded-xl border bg-secondary/40 p-5 text-left">
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Booking ID</span>
+                  <span className="text-muted-foreground">Kode Booking</span>
                   <span className="font-mono font-semibold text-primary">
-                    {bookingId}
+                    {bookingCode}
                   </span>
                 </div>
                 <div className="flex justify-between">

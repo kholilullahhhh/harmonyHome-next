@@ -15,10 +15,46 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
-import { rooms } from '@/lib/data/rooms';
-import { facilities } from '@/lib/data/facilities';
+import { getPublicRooms,
+  getPublicFacilities,
+} from '@/lib/db/public';
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+
+export default async function Home() {
+  const [dbRooms, dbFacilities] = await Promise.all([
+    getPublicRooms(),
+    getPublicFacilities(),
+  ]);
+
+  const rooms = dbRooms.map((r) => ({
+    id: parseInt(r.id.slice(-8), 16) || 0,
+    slug: r.slug,
+    name: r.name,
+    type: r.type,
+    price: r.price,
+    priceLabel: r.priceLabel || `Rp${r.price.toLocaleString('id-ID')} / bulan`,
+    size: r.size,
+    capacity: r.capacity,
+    status: r.status as 'available' | 'limited' | 'full',
+    availableCount: r.availableCount,
+    totalCount: r.totalCount,
+    shortDescription: r.shortDescription,
+    description: r.description,
+    facilities: r.facilities,
+    rules: r.rules,
+    paymentInfo: r.paymentInfo,
+    images: r.images,
+  }));
+
+  const facilities = dbFacilities.map((f) => ({
+    id: parseInt(f.id.slice(-8), 16) || 0,
+    key: f.id,
+    name: f.name,
+    description: f.description,
+    icon: f.icon,
+  }));
+
   return (
     <>
       <Hero />
@@ -35,7 +71,7 @@ export default function Home() {
           />
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {rooms.map((room) => (
-              <RoomCard key={room.id} room={room} />
+              <RoomCard key={room.slug} room={room} />
             ))}
           </div>
         </div>
@@ -51,7 +87,7 @@ export default function Home() {
           />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {facilities.map((f) => (
-              <FacilityCard key={f.id} facility={f} />
+              <FacilityCard key={f.key} facility={f} />
             ))}
           </div>
         </div>

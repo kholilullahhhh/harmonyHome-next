@@ -3,7 +3,9 @@ import type { Metadata } from 'next';
 import { PageHeader } from '@/components/PageHeader';
 import { FacilityCard } from '@/components/FacilityCard';
 import { CTASection } from '@/components/CTASection';
-import { facilities } from '@/lib/data/facilities';
+import { getPublicFacilities } from '@/lib/db/public';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Fasilitas',
@@ -11,7 +13,17 @@ export const metadata: Metadata = {
     'Fasilitas lengkap di Harmony Home: WiFi, AC, kamar mandi dalam, CCTV, parkir, laundry, dapur bersama, dan lebih banyak lagi.',
 };
 
-export default function FasilitasPage() {
+export default async function FasilitasPage() {
+  const facilities = await getPublicFacilities();
+
+  const mapped = facilities.map((f) => ({
+    id: parseInt(f.id.slice(-8), 16) || 0,
+    key: f.id,
+    name: f.name,
+    description: f.description,
+    icon: f.icon,
+  }));
+
   return (
     <>
       <PageHeader
@@ -23,8 +35,8 @@ export default function FasilitasPage() {
       <section className="py-16 lg:py-24">
         <div className="mx-auto max-w-7xl container-px">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {facilities.map((f) => (
-              <FacilityCard key={f.id} facility={f} />
+            {mapped.map((f) => (
+              <FacilityCard key={f.key} facility={f} />
             ))}
           </div>
         </div>

@@ -1,12 +1,21 @@
+import * as LucideIcons from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { type Facility } from '@/lib/data/facilities';
 
 interface FacilityCardProps {
-  facility: Facility;
+  facility: {
+    id: number;
+    name: string;
+    description: string;
+    icon: string;
+  };
 }
 
 export function FacilityCard({ facility }: FacilityCardProps) {
-  const Icon = facility.icon;
+  const Icon =
+    (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
+      facility.icon
+    ] ?? LucideIcons.Star;
+
   return (
     <Card className="group border-border/60 transition-all duration-300 hover:shadow-md">
       <CardContent className="p-6">

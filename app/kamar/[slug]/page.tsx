@@ -17,24 +17,44 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import {
-  getRoomBySlug,
-  getRoomBySlug as getRoom,
-  rooms,
-  roomStatusMap,
-  formatPrice,
-} from '@/lib/data/rooms';
+import { getPublicRoomBySlug } from '@/lib/db/public';
+
+export const dynamic = 'force-dynamic';
+
+const roomStatusMap: Record<
+  string,
+  { label: string; badgeClass: string; dotClass: string }
+> = {
+  available: {
+    label: 'Tersedia',
+    badgeClass:
+      'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900',
+    dotClass: 'bg-emerald-500',
+  },
+  limited: {
+    label: 'Terbatas',
+    badgeClass:
+      'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 border-amber-200 dark:border-amber-900',
+    dotClass: 'bg-amber-500',
+  },
+  full: {
+    label: 'Penuh',
+    badgeClass:
+      'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 border-rose-200 dark:border-rose-900',
+    dotClass: 'bg-rose-500',
+  },
+};
+
+function formatPrice(price: number): string {
+  return 'Rp' + price.toLocaleString('id-ID');
+}
 
 interface PageProps {
   params: { slug: string };
 }
 
-export function generateStaticParams() {
-  return rooms.map((r) => ({ slug: r.slug }));
-}
-
-export function generateMetadata({ params }: PageProps): Metadata {
-  const room = getRoomBySlug(params.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const room = await getPublicRoomBySlug(params.slug);
   if (!room) return { title: 'Kamar Tidak Ditemukan' };
   return {
     title: room.name,
@@ -42,11 +62,11 @@ export function generateMetadata({ params }: PageProps): Metadata {
   };
 }
 
-export default function RoomDetailPage({ params }: PageProps) {
-  const room = getRoom(params.slug);
+export default async function RoomDetailPage({ params }: PageProps) {
+  const room = await getPublicRoomBySlug(params.slug);
   if (!room) notFound();
 
-  const status = roomStatusMap[room.status];
+  const status = roomStatusMap[room.status] ?? roomStatusMap.available;
 
   return (
     <div className="py-8 lg:py-12">
@@ -64,7 +84,7 @@ export default function RoomDetailPage({ params }: PageProps) {
         <div className="mt-6 grid gap-4 lg:grid-cols-3">
           <div className="relative col-span-1 aspect-[4/3] overflow-hidden rounded-xl border border-border/60 lg:col-span-2 lg:row-span-2 lg:aspect-auto">
             <Image
-              src={room.images[0]}
+              src={room.images[0] ?? ''}
               alt={`${room.name} — foto utama`}
               fill
               priority
@@ -239,7 +259,7 @@ export default function RoomDetailPage({ params }: PageProps) {
                 <Separator className="my-4" />
                 <Button asChild size="lg" className="w-full">
                   <Link
-                    href={`/booking?room=${room.slug}`}
+                    href={`/booking?room=${room.id}`}
                   >
                     Booking Kamar
                     <ArrowRight className="ml-2 h-4 w-4" />
