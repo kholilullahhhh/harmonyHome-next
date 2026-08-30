@@ -120,6 +120,11 @@ export default function AdminLoginPage() {
                 'Masuk'
               )}
             </Button>
+            <div>
+              <p className="text-sm text-muted-foreground text-center">
+                Kembali ke <a href="/" className="text-primary underline">Beranda</a>
+              </p>
+            </div>
           </form>
         </CardContent>
       </Card>

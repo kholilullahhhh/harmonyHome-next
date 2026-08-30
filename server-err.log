@@ -1,0 +1,17 @@
+ X Failed to start server
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1948:16)
+    at listenInCluster (node:net:2005:12)
+    at Server.listen (node:net:2110:7)
+    at D:\Nextjs\harmonyHome-next\node_modules\next\dist\server\lib\start-server.js:251:16
+    at new Promise (<anonymous>)
+    at startServer (D:\Nextjs\harmonyHome-next\node_modules\next\dist\server\lib\start-server.js:190:11)
+    at nextStart (D:\Nextjs\harmonyHome-next\node_modules\next\dist\cli\next-start.js:50:40)
+    at D:\Nextjs\harmonyHome-next\node_modules\next\dist\bin\next:156:54
+    at async main (D:\Nextjs\harmonyHome-next\node_modules\next\dist\bin\next:156:5) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}
