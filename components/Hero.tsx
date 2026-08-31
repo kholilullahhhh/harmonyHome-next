@@ -1,9 +1,12 @@
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, Check } from "lucide-react";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/lib/data/rooms";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowRight, Check } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { siteConfig } from '@/lib/data/rooms';
 
 const highlights = [
   "Kamar Eksklusif",
@@ -13,13 +16,19 @@ const highlights = [
 ];
 
 export function Hero() {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
   return (
     <section className="relative -mt-16 lg:-mt-20 min-h-[100svh] overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
           src="https://images.pexels.com/photos/30580640/pexels-photo-30580640.jpeg?auto=compress&cs=tinysrgb&w=1920"
-          alt="Harmony Home — kost eksklusif"
+          alt="Suasana Harmony Home — kost eksklusif di Makassar"
           fill
           priority
           sizes="100vw"
@@ -30,20 +39,40 @@ export function Hero() {
 
       {/* Content */}
       <div className="relative flex min-h-[100svh] flex-col items-center justify-center px-5 pt-16 text-center sm:px-8 lg:px-12 lg:pt-20">
-        <div className="max-w-3xl animate-fade-up">
-          <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-white/90 backdrop-blur">
+        <div className="max-w-3xl">
+          <span
+            className={`inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-white/90 backdrop-blur transition-all duration-700 ease-out ${
+              loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+            style={{ transitionDelay: '200ms' }}
+          >
             {siteConfig.tagline}
           </span>
-          <h1 className="mt-6 font-serif text-4xl font-semibold leading-tight tracking-tight text-white text-balance sm:text-5xl lg:text-6xl">
+          <h1
+            className={`mt-6 font-serif text-4xl font-semibold leading-tight tracking-tight text-white text-balance sm:text-5xl lg:text-6xl transition-all duration-900 ease-out ${
+              loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            }`}
+            style={{ transitionDelay: '350ms' }}
+          >
             Temukan Hunian Nyaman
             <br />
             di Harmony Home
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/80 text-balance sm:text-lg">
+          <p
+            className={`mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/80 text-balance sm:text-lg transition-all duration-700 ease-out ${
+              loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+            }`}
+            style={{ transitionDelay: '550ms' }}
+          >
             {siteConfig.description}
           </p>
 
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div
+            className={`mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row transition-all duration-700 ease-out ${
+              loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+            }`}
+            style={{ transitionDelay: '750ms' }}
+          >
             <Button asChild size="lg" className="min-w-[180px]">
               <Link href="/booking">
                 Booking Kamar
@@ -60,7 +89,12 @@ export function Hero() {
             </Button>
           </div>
 
-          <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <ul
+            className={`mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 transition-all duration-700 ease-out ${
+              loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+            style={{ transitionDelay: '900ms' }}
+          >
             {highlights.map((h) => (
               <li
                 key={h}
