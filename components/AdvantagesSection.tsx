@@ -1,7 +1,14 @@
-import * as LucideIcons from 'lucide-react';
+import { Lock, CheckCircle2, ShieldCheck, MapPin, type LucideIcon } from 'lucide-react';
 
 import { SectionHeading } from '@/components/SectionHeading';
 import { advantages } from '@/lib/data/site-content';
+
+const iconMap: Record<string, LucideIcon> = {
+  Lock,
+  CheckCircle2,
+  ShieldCheck,
+  MapPin,
+};
 
 export function AdvantagesSection() {
   return (
@@ -14,10 +21,7 @@ export function AdvantagesSection() {
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {advantages.map((a) => {
-            const Icon =
-              (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
-                a.icon
-              ] ?? LucideIcons.CheckCircle2;
+            const Icon = iconMap[a.icon] ?? CheckCircle2;
             return (
               <div
                 key={a.id}

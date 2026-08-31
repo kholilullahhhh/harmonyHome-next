@@ -1,12 +1,35 @@
 import Link from 'next/link';
-import { MapPin, ExternalLink } from 'lucide-react';
+import {
+  MapPin,
+  ExternalLink,
+  GraduationCap,
+  ShoppingBag,
+  Hospital,
+  CreditCard,
+  UtensilsCrossed,
+  Building2,
+  Bus,
+  Pill,
+  type LucideIcon,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { siteConfig } from '@/lib/data/rooms';
 import { nearbyPlaces } from '@/lib/data/site-content';
-import * as LucideIcons from 'lucide-react';
 import { Reveal } from '@/components/motion/Reveal';
+
+const iconMap: Record<string, LucideIcon> = {
+  GraduationCap,
+  ShoppingBag,
+  Hospital,
+  CreditCard,
+  UtensilsCrossed,
+  Building2,
+  Bus,
+  Pill,
+  MapPin,
+};
 
 export function LocationSection() {
   return (
@@ -67,10 +90,7 @@ export function LocationSection() {
             </h4>
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {nearbyPlaces.map((place) => {
-                const Icon =
-                  (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
-                    place.icon
-                  ] ?? MapPin;
+                const Icon = iconMap[place.icon] ?? MapPin;
                 return (
                   <Card
                     key={place.id}

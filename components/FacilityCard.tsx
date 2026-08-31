@@ -1,5 +1,30 @@
-import * as LucideIcons from 'lucide-react';
+import {
+  Wifi,
+  Wind,
+  Bath,
+  Cctv,
+  Car,
+  ChefHat,
+  ShieldCheck,
+  Droplets,
+  Sparkles,
+  Star,
+  type LucideIcon,
+} from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+
+const iconMap: Record<string, LucideIcon> = {
+  Wifi,
+  Wind,
+  Bath,
+  Cctv,
+  Car,
+  ChefHat,
+  ShieldCheck,
+  Droplets,
+  Sparkles,
+  Star,
+};
 
 interface FacilityCardProps {
   facility: {
@@ -11,10 +36,7 @@ interface FacilityCardProps {
 }
 
 export function FacilityCard({ facility }: FacilityCardProps) {
-  const Icon =
-    (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
-      facility.icon
-    ] ?? LucideIcons.Star;
+  const Icon = iconMap[facility.icon] ?? Star;
 
   return (
     <Card className="group border-border/60 transition-all duration-300 hover:shadow-md">

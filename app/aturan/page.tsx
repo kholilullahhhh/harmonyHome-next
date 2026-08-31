@@ -1,10 +1,33 @@
 import type { Metadata } from 'next';
-import * as LucideIcons from 'lucide-react';
+import {
+  Clock,
+  Sparkles,
+  ShieldCheck,
+  Car,
+  VolumeX,
+  Sofa,
+  PawPrint,
+  Wallet,
+  ScrollText,
+  type LucideIcon,
+} from 'lucide-react';
 
 import { PageHeader } from '@/components/PageHeader';
 import { CTASection } from '@/components/CTASection';
 import { Card, CardContent } from '@/components/ui/card';
 import { ruleGroups } from '@/lib/data/rules';
+
+const iconMap: Record<string, LucideIcon> = {
+  Clock,
+  Sparkles,
+  ShieldCheck,
+  Car,
+  VolumeX,
+  Sofa,
+  PawPrint,
+  Wallet,
+  ScrollText,
+};
 
 export const metadata: Metadata = {
   title: 'Aturan Kost',
@@ -25,10 +48,7 @@ export default function AturanPage() {
         <div className="mx-auto max-w-5xl container-px">
           <div className="grid gap-6 sm:grid-cols-2">
             {ruleGroups.map((group) => {
-              const Icon =
-                (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
-                  group.icon
-                ] ?? LucideIcons.ScrollText;
+              const Icon = iconMap[group.icon] ?? ScrollText;
               return (
                 <Card key={group.id} className="border-border/60">
                   <CardContent className="p-6">

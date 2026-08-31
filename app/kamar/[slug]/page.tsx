@@ -53,8 +53,12 @@ interface PageProps {
   params: { slug: string };
 }
 
+async function getRoom(slug: string) {
+  return getPublicRoomBySlug(slug);
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const room = await getPublicRoomBySlug(params.slug);
+  const room = await getRoom(params.slug);
   if (!room) return { title: 'Kamar Tidak Ditemukan' };
   return {
     title: room.name,
@@ -63,7 +67,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function RoomDetailPage({ params }: PageProps) {
-  const room = await getPublicRoomBySlug(params.slug);
+  const room = await getRoom(params.slug);
   if (!room) notFound();
 
   const status = roomStatusMap[room.status] ?? roomStatusMap.available;
