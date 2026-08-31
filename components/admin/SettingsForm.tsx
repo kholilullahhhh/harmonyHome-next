@@ -122,7 +122,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-serif text-2xl font-semibold tracking-tight">
             Pengaturan
@@ -131,7 +131,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
             Kelola pengaturan umum Harmony Home.
           </p>
         </div>
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" disabled={loading} className="w-full sm:w-auto">
           {loading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (

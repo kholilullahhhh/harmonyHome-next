@@ -15,16 +15,13 @@ import {
   HelpCircle,
   ShieldCheck,
   ImageIcon,
-  ChevronLeft,
-  Menu,
   Home,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 
 interface AdminSidebarProps {
   user: {
@@ -47,7 +44,7 @@ const navItems = [
   { href: '/admin/settings', label: 'Pengaturan', icon: Settings },
 ];
 
-function SidebarContent({ user }: AdminSidebarProps) {
+export function SidebarContent({ user }: AdminSidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -121,20 +118,20 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r bg-card lg:block">
         <SidebarContent user={user} />
       </aside>
-
-      {/* Mobile sidebar */}
-      <div className="fixed left-0 top-0 z-40 lg:hidden">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="m-2">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0">
-            <SidebarContent user={user} />
-          </SheetContent>
-        </Sheet>
-      </div>
     </>
+  );
+}
+
+export function AdminMobileSidebar({
+  user,
+  open,
+  onOpenChange,
+}: AdminSidebarProps & { open: boolean; onOpenChange: (open: boolean) => void }) {
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="left" className="w-[85%] max-w-xs p-0">
+        <SidebarContent user={user} />
+      </SheetContent>
+    </Sheet>
   );
 }

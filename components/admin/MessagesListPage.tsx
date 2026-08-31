@@ -232,13 +232,13 @@ export function MessagesListPage({
       </Card>
 
       <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedMessage?.subject || 'Pesan'}</DialogTitle>
           </DialogHeader>
           {selectedMessage && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                 <div>
                   <span className="text-muted-foreground">Nama:</span>
                   <p className="font-medium">{selectedMessage.name}</p>

@@ -131,7 +131,7 @@ export function GalleryListPage({ gallery }: GalleryListPageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-serif text-2xl font-semibold tracking-tight">
             Galeri
@@ -147,7 +147,7 @@ export function GalleryListPage({ gallery }: GalleryListPageProps) {
               Tambah Foto
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingId ? 'Edit Foto' : 'Tambah Foto'}
@@ -181,7 +181,7 @@ export function GalleryListPage({ gallery }: GalleryListPageProps) {
                   rows={3}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="category">Kategori</Label>
                   <Input

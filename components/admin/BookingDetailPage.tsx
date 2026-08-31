@@ -130,28 +130,30 @@ export function BookingDetailPage({ booking }: BookingDetailPageProps) {
               <CardTitle className="text-base">Data Pelanggan</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Nama</span>
-                <span className="font-medium">{booking.name}</span>
+              <div className="flex items-start justify-between gap-3">
+                <span className="shrink-0 text-muted-foreground">Nama</span>
+                <span className="text-right font-medium">{booking.name}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Email</span>
-                <span className="font-medium">{booking.email}</span>
+              <div className="flex items-start justify-between gap-3">
+                <span className="shrink-0 text-muted-foreground">Email</span>
+                <span className="break-all text-right font-medium">{booking.email}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Telepon</span>
-                <span className="font-medium">{booking.phone}</span>
+              <div className="flex items-start justify-between gap-3">
+                <span className="shrink-0 text-muted-foreground">Telepon</span>
+                <span className="text-right font-medium">{booking.phone}</span>
               </div>
               {booking.identityNumber && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">No. Identitas</span>
-                  <span className="font-medium">{booking.identityNumber}</span>
+                <div className="flex items-start justify-between gap-3">
+                  <span className="shrink-0 text-muted-foreground">No. Identitas</span>
+                  <span className="break-all text-right font-medium">
+                    {booking.identityNumber}
+                  </span>
                 </div>
               )}
               {booking.address && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Alamat</span>
-                  <span className="max-w-xs text-right font-medium">
+                <div className="flex items-start justify-between gap-3">
+                  <span className="shrink-0 text-muted-foreground">Alamat</span>
+                  <span className="flex-1 text-right font-medium">
                     {booking.address}
                   </span>
                 </div>
@@ -165,29 +167,29 @@ export function BookingDetailPage({ booking }: BookingDetailPageProps) {
               <CardTitle className="text-base">Detail Booking</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Kamar</span>
-                <span className="font-medium">{booking.room.name}</span>
+              <div className="flex items-start justify-between gap-3">
+                <span className="shrink-0 text-muted-foreground">Kamar</span>
+                <span className="text-right font-medium">{booking.room.name}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Harga/Bulan</span>
-                <span className="font-medium">
+              <div className="flex items-start justify-between gap-3">
+                <span className="shrink-0 text-muted-foreground">Harga/Bulan</span>
+                <span className="text-right font-medium">
                   {formatPrice(booking.room.price)}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Tanggal Mulai</span>
-                <span className="font-medium">
+              <div className="flex items-start justify-between gap-3">
+                <span className="shrink-0 text-muted-foreground">Tanggal Mulai</span>
+                <span className="text-right font-medium">
                   {formatDate(booking.startDate)}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Durasi</span>
-                <span className="font-medium">{booking.duration} bulan</span>
+              <div className="flex items-start justify-between gap-3">
+                <span className="shrink-0 text-muted-foreground">Durasi</span>
+                <span className="text-right font-medium">{booking.duration} bulan</span>
               </div>
               <Separator />
-              <div className="flex justify-between">
-                <span className="font-semibold">Total</span>
+              <div className="flex items-start justify-between gap-3">
+                <span className="shrink-0 font-semibold">Total</span>
                 <span className="font-serif text-lg font-semibold text-primary">
                   {formatPrice(booking.totalPrice)}
                 </span>

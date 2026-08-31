@@ -335,8 +335,17 @@ export function RoomForm({ room }: RoomFormProps) {
         </CardContent>
       </Card>
 
-      <div className="flex gap-3">
-        <Button type="submit" disabled={loading}>
+      <div className="flex flex-col-reverse gap-3 sm:flex-row">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.back()}
+          disabled={loading}
+          className="w-full sm:w-auto"
+        >
+          Batal
+        </Button>
+        <Button type="submit" disabled={loading} className="w-full sm:w-auto">
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -347,14 +356,6 @@ export function RoomForm({ room }: RoomFormProps) {
           ) : (
             'Tambah Kamar'
           )}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.back()}
-          disabled={loading}
-        >
-          Batal
         </Button>
       </div>
     </form>

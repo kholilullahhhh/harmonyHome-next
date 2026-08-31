@@ -106,19 +106,19 @@ export function BookingsListPage({
       </div>
 
       <Card className="border-border/60">
-        <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+        <CardHeader className="flex flex-col gap-4 space-y-0 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base">
             Daftar Booking ({total})
           </CardTitle>
-          <div className="flex items-center gap-3">
-            <form onSubmit={handleSearch} className="flex items-center gap-2">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <form onSubmit={handleSearch} className="flex w-full items-center gap-2 sm:w-auto">
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Cari nama / kode..."
-                className="h-9 w-48"
+                className="h-9 flex-1 sm:w-48"
               />
-              <Button type="submit" size="sm" variant="secondary">
+              <Button type="submit" size="sm" variant="secondary" aria-label="Cari">
                 <Search className="h-4 w-4" />
               </Button>
             </form>
@@ -126,7 +126,7 @@ export function BookingsListPage({
               value={searchParams.get('status') ?? 'all'}
               onValueChange={handleStatusFilter}
             >
-              <SelectTrigger className="h-9 w-36">
+              <SelectTrigger className="h-9 w-full sm:w-36">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -202,7 +202,7 @@ export function BookingsListPage({
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="mt-4 flex items-center justify-between">
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                   <p className="text-xs text-muted-foreground">
                     Halaman {page} dari {totalPages}
                   </p>

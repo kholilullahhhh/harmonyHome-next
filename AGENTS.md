@@ -25,10 +25,10 @@ Run `typecheck` and `lint` after changes. There are no tests.
 
 ## Data layers
 - **Database (Prisma + PostgreSQL/Neon)** is the source of truth. `prisma/schema.prisma` models: User, Room, Booking, ContactMessage, Facility, Gallery, Faq, Rule, Testimonial, SiteSetting. Enums (`RoomStatus`, `BookingStatus`, etc.) are uppercase in DB but mapped to lowercase on the public site by `lib/db/public.ts`.
-- `lib/db/prisma.ts` — singleton; **server-only, never import into a client component**. Page data access: `lib/db/public.ts` (public site) and `lib/db/queries.ts` (admin CRUD). Client components must fetch via API routes, never Prisma.
+- `lib/db/prisma.ts` — singleton; **server-only, never import into a client component**. Page data access: `lib/db/public.ts` (public site), `lib/db/queries.ts` (admin CRUD), `lib/db/dashboard.ts` (admin dashboard stats). Client components must fetch via API routes, never Prisma.
 - Existing pages split between DB-backed and static:
-  - DB-backed: `/` rooms/facilities/gallery/faq, `/kamar`, `/kamar/[slug]`, `/fasilitas`, `/booking`.
-  - Still static `lib/data/*`: `Gallery.tsx` gallery images, `/aturan` rules, `/kontak` + `Footer`/`LocationSection`/`QuickInfo`/`WhatsAppButton` use `siteConfig` from `lib/data/rooms.ts`, `FAQAccordion`, `TestimonialsSection`, `BookingStepsSection`/`AdvantagesSection` from `lib/data/site-content`.
+  - DB-backed (query `lib/db/public`): `/` (rooms & facilities; other `/` sections are static), `/kamar`, `/kamar/[slug]`, `/fasilitas`, `/booking`.
+  - Still static `lib/data/*`: `Gallery.tsx` gallery images, `/aturan` rules (`lib/data/rules.ts`), `/kontak` + `Footer`/`LocationSection`/`QuickInfo`/`WhatsAppButton` use `siteConfig` from `lib/data/rooms.ts`, `FAQAccordion`, `TestimonialsSection`, `BookingStepsSection`/`AdvantagesSection` from `lib/data/site-content`, `/galeri` (uses `Gallery`).
 - `siteConfig` and the `Room` type / `roomStatusMap` live in `lib/data/rooms.ts` (contact/WhatsApp/address values there).
 
 ## Booking backend

@@ -120,26 +120,26 @@ export function DashboardPage({ stats, recentBookings }: DashboardPageProps) {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
             <Card key={card.title} className="border-border/60">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              <CardContent className="p-4 sm:p-5">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-xs uppercase tracking-wider text-muted-foreground">
                       {card.title}
                     </p>
-                    <p className="mt-1 font-serif text-3xl font-semibold">
+                    <p className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">
                       {card.value}
                     </p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
                       {card.description}
                     </p>
                   </div>
-                  <div className={`rounded-lg bg-secondary p-2.5 ${card.color}`}>
-                    <Icon className="h-5 w-5" />
+                  <div className={`shrink-0 rounded-lg bg-secondary p-2 sm:p-2.5 ${card.color}`}>
+                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                 </div>
               </CardContent>
@@ -228,8 +228,8 @@ export function DashboardPage({ stats, recentBookings }: DashboardPageProps) {
                           {formatDate(booking.startDate)}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm font-semibold">
+                      <div className="shrink-0 text-right">
+                        <p className="text-sm font-semibold whitespace-nowrap">
                           {formatPrice(booking.totalPrice)}
                         </p>
                       </div>

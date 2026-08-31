@@ -132,7 +132,7 @@ export function RulesListPage({ rules }: RulesListPageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-serif text-2xl font-semibold tracking-tight">
             Aturan
@@ -148,7 +148,7 @@ export function RulesListPage({ rules }: RulesListPageProps) {
               Tambah Aturan
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingId ? 'Edit Aturan' : 'Tambah Aturan'}
@@ -164,7 +164,7 @@ export function RulesListPage({ rules }: RulesListPageProps) {
                   placeholder="Aturan Umum"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="icon">Ikon</Label>
                   <Input

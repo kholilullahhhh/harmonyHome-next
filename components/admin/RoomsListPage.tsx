@@ -72,7 +72,7 @@ export function RoomsListPage({ rooms }: RoomsListPageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-serif text-2xl font-semibold tracking-tight">
             Kamar
@@ -81,7 +81,7 @@ export function RoomsListPage({ rooms }: RoomsListPageProps) {
             Kelola kamar Harmony Home.
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="whitespace-nowrap">
           <Link href="/admin/rooms/new">
             <Plus className="mr-2 h-4 w-4" />
             Tambah Kamar

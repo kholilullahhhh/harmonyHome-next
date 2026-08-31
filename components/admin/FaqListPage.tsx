@@ -123,7 +123,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-serif text-2xl font-semibold tracking-tight">
             FAQ
@@ -139,7 +139,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
               Tambah FAQ
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingId ? 'Edit FAQ' : 'Tambah FAQ'}
@@ -165,7 +165,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                   placeholder="Harmony Home adalah..."
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="sortOrder">Urutan</Label>
                   <Input
