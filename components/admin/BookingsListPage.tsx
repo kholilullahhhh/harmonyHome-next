@@ -3,7 +3,18 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Search, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Search,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+  ArrowUpDown,
+  CalendarCheck,
+  CheckCircle2,
+  XCircle,
+  MoreHorizontal,
+} from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,6 +27,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { cn } from '@/lib/utils';
 
 interface Booking {
   id: string;
@@ -94,13 +123,29 @@ export function BookingsListPage({
     router.push(`/admin/bookings?${params.toString()}`);
   };
 
+  const handleStatusUpdate = async (id: string, newStatus: string) => {
+    try {
+      const res = await fetch(`/api/bookings/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) throw new Error('Gagal memperbarui status');
+      const statusLabel = statusConfig[newStatus]?.label ?? newStatus;
+      toast.success(`Booking berhasil diubah ke "${statusLabel}".`);
+      router.refresh();
+    } catch {
+      toast.error('Gagal memperbarui status booking.');
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="font-serif text-2xl font-semibold tracking-tight">
+        <h1 className="font-serif text-xl font-semibold tracking-tight sm:text-2xl">
           Booking
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs text-muted-foreground sm:text-sm">
           Kelola seluruh booking Harmony Home.
         </p>
       </div>
@@ -141,9 +186,12 @@ export function BookingsListPage({
         </CardHeader>
         <CardContent>
           {bookings.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              Tidak ada booking ditemukan.
-            </p>
+            <div className="flex flex-col items-center py-12">
+              <CalendarCheck className="h-12 w-12 text-muted-foreground/50" />
+              <p className="mt-4 text-sm text-muted-foreground">
+                {total === 0 ? 'Belum ada booking.' : 'Tidak ada booking yang cocok.'}
+              </p>
+            </div>
           ) : (
             <>
               <div className="overflow-x-auto">
@@ -152,9 +200,9 @@ export function BookingsListPage({
                     <tr className="border-b text-left text-xs uppercase tracking-wider text-muted-foreground">
                       <th className="pb-3 pr-4 font-medium">Kode</th>
                       <th className="pb-3 pr-4 font-medium">Nama</th>
-                      <th className="pb-3 pr-4 font-medium">Kamar</th>
-                      <th className="pb-3 pr-4 font-medium">Mulai</th>
-                      <th className="pb-3 pr-4 font-medium">Durasi</th>
+                      <th className="hidden pb-3 pr-4 font-medium md:table-cell">Kamar</th>
+                      <th className="hidden pb-3 pr-4 font-medium sm:table-cell">Mulai</th>
+                      <th className="hidden pb-3 pr-4 font-medium sm:table-cell">Durasi</th>
                       <th className="pb-3 pr-4 font-medium">Total</th>
                       <th className="pb-3 pr-4 font-medium">Status</th>
                       <th className="pb-3 font-medium">Aksi</th>
@@ -168,30 +216,91 @@ export function BookingsListPage({
                           <td className="py-3 pr-4 font-mono text-xs font-semibold text-primary">
                             {booking.bookingCode}
                           </td>
-                          <td className="py-3 pr-4 font-medium">{booking.name}</td>
-                          <td className="py-3 pr-4 text-muted-foreground">
+                          <td className="py-3 pr-4">
+                            <p className="font-medium">{booking.name}</p>
+                            <p className="text-xs text-muted-foreground md:hidden">{booking.roomName}</p>
+                          </td>
+                          <td className="hidden py-3 pr-4 text-muted-foreground md:table-cell">
                             {booking.roomName}
                           </td>
-                          <td className="py-3 pr-4 text-muted-foreground">
+                          <td className="hidden py-3 pr-4 text-muted-foreground sm:table-cell">
                             {formatDate(booking.startDate)}
                           </td>
-                          <td className="py-3 pr-4 text-muted-foreground">
+                          <td className="hidden py-3 pr-4 text-muted-foreground sm:table-cell">
                             {booking.duration} bln
                           </td>
                           <td className="py-3 pr-4 font-medium">
                             {formatPrice(booking.totalPrice)}
                           </td>
                           <td className="py-3 pr-4">
-                            <Badge variant="secondary" className={`text-xs ${st.className}`}>
+                            <Badge variant="secondary" className={cn('text-xs', st.className)}>
                               {st.label}
                             </Badge>
                           </td>
                           <td className="py-3">
-                            <Button asChild variant="ghost" size="sm">
-                              <Link href={`/admin/bookings/${booking.id}`}>
-                                <Eye className="h-4 w-4" />
-                              </Link>
-                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem asChild>
+                                  <Link href={`/admin/bookings/${booking.id}`}>
+                                    <Eye className="mr-2 h-4 w-4" />
+                                    Lihat Detail
+                                  </Link>
+                                </DropdownMenuItem>
+                                {booking.status === 'PENDING' && (
+                                  <DropdownMenuItem
+                                    onClick={() => handleStatusUpdate(booking.id, 'CONFIRMED')}
+                                    className="text-emerald-600"
+                                  >
+                                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                                    Konfirmasi
+                                  </DropdownMenuItem>
+                                )}
+                                {booking.status === 'PENDING' && (
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <DropdownMenuItem
+                                        onSelect={(e) => e.preventDefault()}
+                                        className="text-rose-600"
+                                      >
+                                        <XCircle className="mr-2 h-4 w-4" />
+                                        Tolak
+                                      </DropdownMenuItem>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Tolak Booking</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Apakah Anda yakin ingin menolak booking {booking.bookingCode}?
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                                        <AlertDialogAction
+                                          onClick={() => handleStatusUpdate(booking.id, 'CANCELLED')}
+                                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        >
+                                          Tolak
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                )}
+                                {booking.status === 'CONFIRMED' && (
+                                  <DropdownMenuItem
+                                    onClick={() => handleStatusUpdate(booking.id, 'COMPLETED')}
+                                    className="text-sky-600"
+                                  >
+                                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                                    Selesai
+                                  </DropdownMenuItem>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </td>
                         </tr>
                       );
@@ -200,51 +309,40 @@ export function BookingsListPage({
                 </table>
               </div>
 
-              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-[11px] text-muted-foreground sm:text-xs">
                     Halaman {page} dari {totalPages}
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1">
                     <Button
                       asChild
                       variant="outline"
                       size="sm"
+                      className="h-8 w-8 p-0"
                       disabled={page <= 1}
                     >
                       <Link
                         href={`/admin/bookings?page=${page - 1}${
-                          searchParams.get('status')
-                            ? `&status=${searchParams.get('status')}`
-                            : ''
-                        }${
-                          searchParams.get('search')
-                            ? `&search=${searchParams.get('search')}`
-                            : ''
-                        }`}
+                          searchParams.get('status') ? `&status=${searchParams.get('status')}` : ''
+                        }${searchParams.get('search') ? `&search=${searchParams.get('search')}` : ''}`}
                       >
-                        <ChevronLeft className="h-4 w-4" />
+                        <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </Link>
                     </Button>
                     <Button
                       asChild
                       variant="outline"
                       size="sm"
+                      className="h-8 w-8 p-0"
                       disabled={page >= totalPages}
                     >
                       <Link
                         href={`/admin/bookings?page=${page + 1}${
-                          searchParams.get('status')
-                            ? `&status=${searchParams.get('status')}`
-                            : ''
-                        }${
-                          searchParams.get('search')
-                            ? `&search=${searchParams.get('search')}`
-                            : ''
-                        }`}
+                          searchParams.get('status') ? `&status=${searchParams.get('status')}` : ''
+                        }${searchParams.get('search') ? `&search=${searchParams.get('search')}` : ''}`}
                       >
-                        <ChevronRight className="h-4 w-4" />
+                        <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </Link>
                     </Button>
                   </div>

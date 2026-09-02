@@ -106,24 +106,24 @@ export function BookingDetailPage({ booking }: BookingDetailPageProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button asChild variant="ghost" size="sm">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <Button asChild variant="ghost" size="sm" className="h-8 px-2 sm:h-9">
           <Link href="/admin/bookings">
-            <ArrowLeft className="mr-1 h-4 w-4" />
+            <ArrowLeft className="mr-0.5 h-3.5 w-3.5 sm:mr-1 sm:h-4 sm:w-4" />
             Kembali
           </Link>
         </Button>
         <div>
-          <h1 className="font-serif text-2xl font-semibold tracking-tight">
+          <h1 className="font-serif text-xl font-semibold tracking-tight sm:text-2xl">
             Detail Booking
           </h1>
-          <p className="font-mono text-sm text-primary">{booking.bookingCode}</p>
+          <p className="font-mono text-xs text-primary sm:text-sm">{booking.bookingCode}</p>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+        <div className="space-y-4 sm:space-y-6 lg:col-span-2">
           {/* Customer Info */}
           <Card className="border-border/60">
             <CardHeader>
@@ -208,7 +208,7 @@ export function BookingDetailPage({ booking }: BookingDetailPageProps) {
         </div>
 
         {/* Status & Actions */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <Card className="border-border/60">
             <CardHeader>
               <CardTitle className="text-base">Status</CardTitle>

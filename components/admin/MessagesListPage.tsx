@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { cn } from '@/lib/utils';
 
 interface Message {
   id: string;
@@ -118,12 +119,12 @@ export function MessagesListPage({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="font-serif text-2xl font-semibold tracking-tight">
+        <h1 className="font-serif text-xl font-semibold tracking-tight sm:text-2xl">
           Pesan Kontak
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs text-muted-foreground sm:text-sm">
           Kelola pesan masuk dari pengunjung Harmony Home.
         </p>
       </div>
@@ -145,12 +146,12 @@ export function MessagesListPage({
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b text-left text-xs uppercase tracking-wider text-muted-foreground">
-                    <th className="pb-3 pr-4 font-medium">Nama</th>
-                    <th className="pb-3 pr-4 font-medium">Email</th>
-                    <th className="pb-3 pr-4 font-medium">Subjek</th>
-                    <th className="pb-3 pr-4 font-medium">Tanggal</th>
-                    <th className="pb-3 pr-4 font-medium">Status</th>
-                    <th className="pb-3 font-medium">Aksi</th>
+                    <th className="pb-2 pr-3 font-medium sm:pb-3 sm:pr-4">Nama</th>
+                    <th className="hidden pb-2 pr-3 font-medium sm:table-cell sm:pb-3 sm:pr-4">Email</th>
+                    <th className="hidden pb-2 pr-3 font-medium sm:table-cell sm:pb-3 sm:pr-4">Subjek</th>
+                    <th className="hidden pb-2 pr-3 font-medium md:table-cell sm:pb-3 sm:pr-4">Tanggal</th>
+                    <th className="pb-2 pr-3 font-medium sm:pb-3 sm:pr-4">Status</th>
+                    <th className="pb-2 font-medium sm:pb-3">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
@@ -158,24 +159,29 @@ export function MessagesListPage({
                     const st = statusConfig[msg.status] ?? statusConfig.UNREAD;
                     return (
                       <tr key={msg.id} className="hover:bg-secondary/50">
-                        <td className="pb-3 pr-4 font-medium">{msg.name}</td>
-                        <td className="pb-3 pr-4 text-muted-foreground">{msg.email}</td>
-                        <td className="pb-3 pr-4 text-muted-foreground max-w-[200px] truncate">
-                          {msg.subject || '-'}
+                        <td className="pb-2 pr-3 sm:pb-3 sm:pr-4">
+                          <p className="font-medium">{msg.name}</p>
+                          <p className="text-[11px] text-muted-foreground sm:hidden">{msg.email}</p>
+                          <p className="text-[11px] text-muted-foreground md:hidden">{formatDate(msg.createdAt)}</p>
                         </td>
-                        <td className="pb-3 pr-4 text-muted-foreground">
+                        <td className="hidden pb-2 pr-3 text-muted-foreground sm:table-cell sm:pb-3 sm:pr-4">{msg.email}</td>
+                        <td className="hidden max-w-[200px] pb-2 pr-3 text-muted-foreground sm:table-cell sm:pb-3 sm:pr-4">
+                          <span className="truncate">{msg.subject || '-'}</span>
+                        </td>
+                        <td className="hidden pb-2 pr-3 text-muted-foreground md:table-cell sm:pb-3 sm:pr-4">
                           {formatDate(msg.createdAt)}
                         </td>
-                        <td className="pb-3 pr-4">
-                          <Badge variant="secondary" className={`text-xs ${st.className}`}>
+                        <td className="pb-2 pr-3 sm:pb-3 sm:pr-4">
+                          <Badge variant="secondary" className={cn('text-[9px] sm:text-xs', st.className)}>
                             {st.label}
                           </Badge>
                         </td>
-                        <td className="pb-3">
-                          <div className="flex gap-1">
+                        <td className="pb-2 sm:pb-3">
+                          <div className="flex gap-0.5 sm:gap-1">
                             <Button
                               variant="ghost"
                               size="sm"
+                              className="h-8 w-8 p-0"
                               onClick={() => {
                                 setSelectedMessage(msg);
                                 if (msg.status === 'UNREAD') {
@@ -183,22 +189,23 @@ export function MessagesListPage({
                                 }
                               }}
                             >
-                              <Eye className="h-4 w-4" />
+                              <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             </Button>
                             {msg.status !== 'REPLIED' && (
                               <Button
                                 variant="ghost"
                                 size="sm"
+                                className="h-8 w-8 p-0"
                                 onClick={() => handleMarkAsReplied(msg.id)}
                                 title="Tandai sudah dibalas"
                               >
-                                <CheckCircle className="h-4 w-4 text-emerald-500" />
+                                <CheckCircle className="h-3.5 w-3.5 text-emerald-500 sm:h-4 sm:w-4" />
                               </Button>
                             )}
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                  <Trash2 className="h-3.5 w-3.5 text-destructive sm:h-4 sm:w-4" />
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent>

@@ -1,13 +1,10 @@
-import { getDashboardStats, getRecentBookings } from '@/lib/db/dashboard';
+import { getDashboardData } from '@/lib/db/dashboard';
 import { DashboardPage } from '@/components/admin/DashboardPage';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
-  const [stats, recentBookings] = await Promise.all([
-    getDashboardStats(),
-    getRecentBookings(5),
-  ]);
+  const data = await getDashboardData();
 
-  return <DashboardPage stats={stats} recentBookings={recentBookings} />;
+  return <DashboardPage data={data} />;
 }

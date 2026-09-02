@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { cn } from '@/lib/utils';
 
 interface TestimonialItem {
   id: string;
@@ -130,13 +131,13 @@ export function TestimonialsListPage({ testimonials }: TestimonialsListPageProps
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-2xl font-semibold tracking-tight">
+          <h1 className="font-serif text-xl font-semibold tracking-tight sm:text-2xl">
             Testimoni
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Kelola testimoni penghuni Harmony Home.
           </p>
         </div>
@@ -241,42 +242,45 @@ export function TestimonialsListPage({ testimonials }: TestimonialsListPageProps
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b text-left text-xs uppercase tracking-wider text-muted-foreground">
-                    <th className="px-6 py-3 font-medium">Nama</th>
-                    <th className="px-6 py-3 font-medium">Peran</th>
-                    <th className="px-6 py-3 font-medium">Konten</th>
-                    <th className="px-6 py-3 font-medium">Rating</th>
-                    <th className="px-6 py-3 font-medium">Status</th>
-                    <th className="px-6 py-3 font-medium">Aksi</th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Nama</th>
+                    <th className="hidden px-3 py-2.5 font-medium sm:table-cell sm:px-6 sm:py-3">Peran</th>
+                    <th className="hidden px-3 py-2.5 font-medium sm:table-cell sm:px-6 sm:py-3">Konten</th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Rating</th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Status</th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {testimonials.map((item) => (
                     <tr key={item.id} className="hover:bg-secondary/50">
-                      <td className="px-6 py-4 font-medium">{item.name}</td>
-                      <td className="px-6 py-4 text-muted-foreground">{item.role}</td>
-                      <td className="px-6 py-4 text-muted-foreground max-w-[250px] truncate">
-                        {item.content}
+                      <td className="px-3 py-2.5 sm:px-6 sm:py-4">
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-[11px] text-muted-foreground sm:hidden">{item.role}</p>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="hidden px-3 py-2.5 text-muted-foreground sm:table-cell sm:px-6 sm:py-4">{item.role}</td>
+                      <td className="hidden max-w-[250px] px-3 py-2.5 text-muted-foreground sm:table-cell sm:px-6 sm:py-4">
+                        <span className="truncate">{item.content}</span>
+                      </td>
+                      <td className="px-3 py-2.5 sm:px-6 sm:py-4">
                         <div className="flex items-center gap-1">
                           <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                          <span className="text-muted-foreground">{item.rating}</span>
+                          <span className="text-xs text-muted-foreground">{item.rating}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <Badge variant="secondary" className={item.isPublished ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-950/60 dark:text-gray-400'}>
+                      <td className="px-3 py-2.5 sm:px-6 sm:py-4">
+                        <Badge variant="secondary" className={cn('text-[9px] sm:text-xs', item.isPublished ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-950/60 dark:text-gray-400')}>
                           {item.isPublished ? 'Aktif' : 'Draft'}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => openEdit(item)}>
-                            <Pencil className="h-4 w-4" />
+                      <td className="px-3 py-2.5 sm:px-6 sm:py-4">
+                        <div className="flex gap-0.5 sm:gap-1">
+                          <Button variant="ghost" size="sm" onClick={() => openEdit(item)} className="h-8 w-8 p-0">
+                            <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <Trash2 className="h-4 w-4 text-destructive" />
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <Trash2 className="h-3.5 w-3.5 text-destructive sm:h-4 sm:w-4" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>

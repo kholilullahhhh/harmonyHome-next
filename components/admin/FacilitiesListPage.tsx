@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Pencil, Trash2, GripVertical, Loader2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -134,30 +134,30 @@ export function FacilitiesListPage({ facilities }: FacilitiesListPageProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-2xl font-semibold tracking-tight">
+          <h1 className="font-serif text-xl font-semibold tracking-tight sm:text-2xl">
             Fasilitas
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Kelola fasilitas Harmony Home.
           </p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openAdd}>
-              <Plus className="mr-2 h-4 w-4" />
+            <Button onClick={openAdd} className="h-9 text-xs sm:h-10 sm:text-sm">
+              <Plus className="mr-1.5 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
               Tambah Fasilitas
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto">
+          <DialogContent className="max-h-[85vh] max-w-md overflow-y-auto sm:max-h-[90vh]">
             <DialogHeader>
               <DialogTitle>
                 {editingId ? 'Edit Fasilitas' : 'Tambah Fasilitas'}
               </DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nama</Label>
                 <Input
@@ -167,7 +167,7 @@ export function FacilitiesListPage({ facilities }: FacilitiesListPageProps) {
                   placeholder="WiFi"
                 />
               </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="icon">Ikon</Label>
                   <Input
@@ -205,7 +205,7 @@ export function FacilitiesListPage({ facilities }: FacilitiesListPageProps) {
                   placeholder="https://..."
                 />
               </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="sortOrder">Urutan</Label>
                   <Input
@@ -221,13 +221,13 @@ export function FacilitiesListPage({ facilities }: FacilitiesListPageProps) {
                     checked={form.isPublished}
                     onCheckedChange={(v) => setForm({ ...form, isPublished: v })}
                   />
-                  <Label htmlFor="isPublished" className="cursor-pointer">
+                  <Label htmlFor="isPublished" className="cursor-pointer text-xs sm:text-sm">
                     Dipublikasikan
                   </Label>
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" disabled={loading}>
+                <Button type="submit" disabled={loading} className="w-full sm:w-auto">
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {editingId ? 'Simpan' : 'Tambah'}
                 </Button>
@@ -251,37 +251,38 @@ export function FacilitiesListPage({ facilities }: FacilitiesListPageProps) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b text-left text-xs uppercase tracking-wider text-muted-foreground">
-                    <th className="px-6 py-3 font-medium">Nama</th>
-                    <th className="px-6 py-3 font-medium">Ikon</th>
-                    <th className="px-6 py-3 font-medium">Kategori</th>
-                    <th className="px-6 py-3 font-medium">Urutan</th>
-                    <th className="px-6 py-3 font-medium">Status</th>
-                    <th className="px-6 py-3 font-medium">Aksi</th>
+                    <th className="px-3 py-3 font-medium sm:px-6">Nama</th>
+                    <th className="hidden px-3 py-3 font-medium sm:table-cell sm:px-6">Ikon</th>
+                    <th className="hidden px-3 py-3 font-medium sm:table-cell sm:px-6">Kategori</th>
+                    <th className="hidden px-3 py-3 font-medium sm:table-cell sm:px-6">Urutan</th>
+                    <th className="px-3 py-3 font-medium sm:px-6">Status</th>
+                    <th className="px-3 py-3 font-medium sm:px-6">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {facilities.map((item) => (
                     <tr key={item.id} className="hover:bg-secondary/50">
-                      <td className="px-6 py-4 font-medium">{item.name}</td>
-                      <td className="px-6 py-4 text-muted-foreground">{item.icon}</td>
-                      <td className="px-6 py-4 text-muted-foreground">{item.category}</td>
-                      <td className="px-6 py-4 text-muted-foreground">
-                        {item.sortOrder}
+                      <td className="px-3 py-3 sm:px-6">
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-[11px] text-muted-foreground sm:hidden">{item.category}</p>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="hidden px-3 py-3 text-muted-foreground sm:table-cell sm:px-6">{item.icon}</td>
+                      <td className="hidden px-3 py-3 text-muted-foreground sm:table-cell sm:px-6">{item.category}</td>
+                      <td className="hidden px-3 py-3 text-muted-foreground sm:table-cell sm:px-6">{item.sortOrder}</td>
+                      <td className="px-3 py-3 sm:px-6">
                         <Badge variant="secondary" className={item.isPublished ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-950/60 dark:text-gray-400'}>
                           {item.isPublished ? 'Aktif' : 'Draft'}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => openEdit(item)}>
-                            <Pencil className="h-4 w-4" />
+                      <td className="px-3 py-3 sm:px-6">
+                        <div className="flex gap-0.5 sm:gap-1">
+                          <Button variant="ghost" size="sm" onClick={() => openEdit(item)} className="h-8 w-8 p-0">
+                            <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <Trash2 className="h-4 w-4 text-destructive" />
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <Trash2 className="h-3.5 w-3.5 text-destructive sm:h-4 sm:w-4" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>

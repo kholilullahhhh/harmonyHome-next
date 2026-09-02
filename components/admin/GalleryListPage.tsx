@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { cn } from '@/lib/utils';
 
 interface GalleryItem {
   id: string;
@@ -130,13 +131,13 @@ export function GalleryListPage({ gallery }: GalleryListPageProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-2xl font-semibold tracking-tight">
+          <h1 className="font-serif text-xl font-semibold tracking-tight sm:text-2xl">
             Galeri
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Kelola galeri foto Harmony Home.
           </p>
         </div>
@@ -236,33 +237,36 @@ export function GalleryListPage({ gallery }: GalleryListPageProps) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b text-left text-xs uppercase tracking-wider text-muted-foreground">
-                    <th className="px-6 py-3 font-medium">Judul</th>
-                    <th className="px-6 py-3 font-medium">Kategori</th>
-                    <th className="px-6 py-3 font-medium">Urutan</th>
-                    <th className="px-6 py-3 font-medium">Status</th>
-                    <th className="px-6 py-3 font-medium">Aksi</th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Judul</th>
+                    <th className="hidden px-3 py-2.5 font-medium sm:table-cell sm:px-6 sm:py-3">Kategori</th>
+                    <th className="hidden px-3 py-2.5 font-medium sm:table-cell sm:px-6 sm:py-3">Urutan</th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Status</th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
                   {gallery.map((item) => (
                     <tr key={item.id} className="hover:bg-secondary/50">
-                      <td className="px-6 py-4 font-medium">{item.title}</td>
-                      <td className="px-6 py-4 text-muted-foreground">{item.category}</td>
-                      <td className="px-6 py-4 text-muted-foreground">{item.sortOrder}</td>
-                      <td className="px-6 py-4">
-                        <Badge variant="secondary" className={item.isPublished ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-950/60 dark:text-gray-400'}>
+                      <td className="px-3 py-2.5 sm:px-6 sm:py-4">
+                        <p className="font-medium">{item.title}</p>
+                        <p className="text-[11px] text-muted-foreground sm:hidden">{item.category}</p>
+                      </td>
+                      <td className="hidden px-3 py-2.5 text-muted-foreground sm:table-cell sm:px-6 sm:py-4">{item.category}</td>
+                      <td className="hidden px-3 py-2.5 text-muted-foreground sm:table-cell sm:px-6 sm:py-4">{item.sortOrder}</td>
+                      <td className="px-3 py-2.5 sm:px-6 sm:py-4">
+                        <Badge variant="secondary" className={cn('text-[9px] sm:text-xs', item.isPublished ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-950/60 dark:text-gray-400')}>
                           {item.isPublished ? 'Aktif' : 'Draft'}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => openEdit(item)}>
-                            <Pencil className="h-4 w-4" />
+                      <td className="px-3 py-2.5 sm:px-6 sm:py-4">
+                        <div className="flex gap-0.5 sm:gap-1">
+                          <Button variant="ghost" size="sm" onClick={() => openEdit(item)} className="h-8 w-8 p-0">
+                            <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </Button>
-                          <AlertDialog>
+                            <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <Trash2 className="h-4 w-4 text-destructive" />
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <Trash2 className="h-3.5 w-3.5 text-destructive sm:h-4 sm:w-4" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>

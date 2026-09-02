@@ -121,17 +121,17 @@ export function SettingsForm({ settings }: SettingsFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-2xl font-semibold tracking-tight">
+          <h1 className="font-serif text-xl font-semibold tracking-tight sm:text-2xl">
             Pengaturan
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Kelola pengaturan umum Harmony Home.
           </p>
         </div>
-        <Button type="submit" disabled={loading} className="w-full sm:w-auto">
+        <Button type="submit" disabled={loading} className="h-9 w-full text-xs sm:h-10 sm:w-auto sm:text-sm">
           {loading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
