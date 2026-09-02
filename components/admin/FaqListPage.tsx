@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { Plus, Pencil, Trash2, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import * as React from "react";
+import { useRouter } from "next/navigation";
+import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,8 +30,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
 interface FaqItem {
   id: string;
@@ -46,8 +46,8 @@ interface FaqListPageProps {
 }
 
 const emptyForm = {
-  question: '',
-  answer: '',
+  question: "",
+  answer: "",
   sortOrder: 0,
   isPublished: true,
 };
@@ -79,18 +79,16 @@ export function FaqListPage({ faq }: FaqListPageProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.question.trim() || !form.answer.trim()) {
-      toast.error('Pertanyaan dan jawaban wajib diisi.');
+      toast.error("Pertanyaan dan jawaban wajib diisi.");
       return;
     }
     setLoading(true);
     try {
-      const url = editingId
-        ? `/api/admin/faq/${editingId}`
-        : '/api/admin/faq';
-      const method = editingId ? 'PATCH' : 'POST';
+      const url = editingId ? `/api/admin/faq/${editingId}` : "/api/admin/faq";
+      const method = editingId ? "PATCH" : "POST";
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
           question: form.question.trim(),
@@ -99,13 +97,15 @@ export function FaqListPage({ faq }: FaqListPageProps) {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Gagal menyimpan');
+        throw new Error(data.error || "Gagal menyimpan");
       }
-      toast.success(editingId ? 'FAQ berhasil diperbarui.' : 'FAQ berhasil ditambahkan.');
+      toast.success(
+        editingId ? "FAQ berhasil diperbarui." : "FAQ berhasil ditambahkan.",
+      );
       setDialogOpen(false);
       router.refresh();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Terjadi kesalahan.');
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan.");
     } finally {
       setLoading(false);
     }
@@ -113,12 +113,12 @@ export function FaqListPage({ faq }: FaqListPageProps) {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await fetch(`/api/admin/faq/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Gagal menghapus');
-      toast.success('FAQ berhasil dihapus.');
+      const res = await fetch(`/api/admin/faq/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Gagal menghapus");
+      toast.success("FAQ berhasil dihapus.");
       router.refresh();
     } catch {
-      toast.error('Gagal menghapus FAQ.');
+      toast.error("Gagal menghapus FAQ.");
     }
   };
 
@@ -142,9 +142,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
           </DialogTrigger>
           <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>
-                {editingId ? 'Edit FAQ' : 'Tambah FAQ'}
-              </DialogTitle>
+              <DialogTitle>{editingId ? "Edit FAQ" : "Tambah FAQ"}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -152,7 +150,9 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                 <Input
                   id="question"
                   value={form.question}
-                  onChange={(e) => setForm({ ...form, question: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, question: e.target.value })
+                  }
                   placeholder="Apa itu Harmony Home?"
                 />
               </div>
@@ -163,6 +163,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                   value={form.answer}
                   onChange={(e) => setForm({ ...form, answer: e.target.value })}
                   rows={4}
+                  maxLength={100}
                   placeholder="Harmony Home adalah..."
                 />
               </div>
@@ -173,14 +174,21 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                     id="sortOrder"
                     type="number"
                     value={form.sortOrder}
-                    onChange={(e) => setForm({ ...form, sortOrder: parseInt(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        sortOrder: parseInt(e.target.value) || 0,
+                      })
+                    }
                   />
                 </div>
                 <div className="flex items-center gap-2 pb-1">
                   <Switch
                     id="isPublished"
                     checked={form.isPublished}
-                    onCheckedChange={(v) => setForm({ ...form, isPublished: v })}
+                    onCheckedChange={(v) =>
+                      setForm({ ...form, isPublished: v })
+                    }
                   />
                   <Label htmlFor="isPublished" className="cursor-pointer">
                     Dipublikasikan
@@ -190,7 +198,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
               <DialogFooter>
                 <Button type="submit" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {editingId ? 'Simpan' : 'Tambah'}
+                  {editingId ? "Simpan" : "Tambah"}
                 </Button>
               </DialogFooter>
             </form>
@@ -212,11 +220,21 @@ export function FaqListPage({ faq }: FaqListPageProps) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b text-left text-xs uppercase tracking-wider text-muted-foreground">
-                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Pertanyaan</th>
-                    <th className="hidden px-3 py-2.5 font-medium sm:table-cell sm:px-6 sm:py-3">Jawaban</th>
-                    <th className="hidden px-3 py-2.5 font-medium sm:table-cell sm:px-6 sm:py-3">Urutan</th>
-                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Status</th>
-                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">Aksi</th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">
+                      Pertanyaan
+                    </th>
+                    <th className="hidden px-3 py-2.5 font-medium sm:table-cell sm:px-6 sm:py-3">
+                      Jawaban
+                    </th>
+                    <th className="hidden px-3 py-2.5 font-medium sm:table-cell sm:px-6 sm:py-3">
+                      Urutan
+                    </th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">
+                      Status
+                    </th>
+                    <th className="px-3 py-2.5 font-medium sm:px-6 sm:py-3">
+                      Aksi
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
@@ -224,25 +242,46 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                     <tr key={item.id} className="hover:bg-secondary/50">
                       <td className="max-w-[200px] px-3 py-2.5 font-medium sm:max-w-[250px] sm:px-6 sm:py-4">
                         <p className="truncate">{item.question}</p>
-                        <p className="mt-0.5 truncate text-[11px] text-muted-foreground sm:hidden">{item.answer}</p>
+                        <p className="mt-0.5 truncate text-[11px] text-muted-foreground sm:hidden">
+                          {item.answer}
+                        </p>
                       </td>
                       <td className="hidden max-w-[300px] px-3 py-2.5 text-muted-foreground sm:table-cell sm:px-6 sm:py-4">
                         <span className="truncate">{item.answer}</span>
                       </td>
-                      <td className="hidden px-3 py-2.5 text-muted-foreground sm:table-cell sm:px-6 sm:py-4">{item.sortOrder}</td>
+                      <td className="hidden px-3 py-2.5 text-muted-foreground sm:table-cell sm:px-6 sm:py-4">
+                        {item.sortOrder}
+                      </td>
                       <td className="px-3 py-2.5 sm:px-6 sm:py-4">
-                        <Badge variant="secondary" className={cn('text-[9px] sm:text-xs', item.isPublished ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' : 'bg-gray-100 text-gray-700 dark:bg-gray-950/60 dark:text-gray-400')}>
-                          {item.isPublished ? 'Aktif' : 'Draft'}
+                        <Badge
+                          variant="secondary"
+                          className={cn(
+                            "text-[9px] sm:text-xs",
+                            item.isPublished
+                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400"
+                              : "bg-gray-100 text-gray-700 dark:bg-gray-950/60 dark:text-gray-400",
+                          )}
+                        >
+                          {item.isPublished ? "Aktif" : "Draft"}
                         </Badge>
                       </td>
                       <td className="px-3 py-2.5 sm:px-6 sm:py-4">
                         <div className="flex gap-0.5 sm:gap-1">
-                          <Button variant="ghost" size="sm" onClick={() => openEdit(item)} className="h-8 w-8 p-0">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openEdit(item)}
+                            className="h-8 w-8 p-0"
+                          >
                             <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 w-8 p-0"
+                              >
                                 <Trash2 className="h-3.5 w-3.5 text-destructive sm:h-4 sm:w-4" />
                               </Button>
                             </AlertDialogTrigger>
@@ -250,7 +289,8 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                               <AlertDialogHeader>
                                 <AlertDialogTitle>Hapus FAQ</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Apakah Anda yakin ingin menghapus FAQ ini? Tindakan ini tidak dapat dibatalkan.
+                                  Apakah Anda yakin ingin menghapus FAQ ini?
+                                  Tindakan ini tidak dapat dibatalkan.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
