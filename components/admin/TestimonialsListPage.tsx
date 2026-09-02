@@ -183,7 +183,7 @@ export function TestimonialsListPage({
                   />
                 </div>
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="content">Konten</Label>
                 <Textarea
                   id="content"
@@ -195,7 +195,7 @@ export function TestimonialsListPage({
                   maxLength={15}
                   placeholder="Sangat nyaman dan strategis..."
                 />
-              </div>
+              </div> */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="rating">Rating (1-5)</Label>

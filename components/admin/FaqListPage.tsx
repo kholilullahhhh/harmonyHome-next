@@ -156,7 +156,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                   placeholder="Apa itu Harmony Home?"
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="answer">Jawaban</Label>
                 <Textarea
                   id="answer"
@@ -166,7 +166,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                   maxLength={15}
                   placeholder="Harmony Home adalah..."
                 />
-              </div>
+              </div> */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="sortOrder">Urutan</Label>
