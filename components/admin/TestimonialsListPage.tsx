@@ -192,7 +192,7 @@ export function TestimonialsListPage({
                     setForm({ ...form, content: e.target.value })
                   }
                   rows={4}
-                  maxLength={80}
+                  maxLength={15}
                   placeholder="Sangat nyaman dan strategis..."
                 />
               </div>

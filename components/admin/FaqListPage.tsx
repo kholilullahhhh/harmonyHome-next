@@ -163,7 +163,7 @@ export function FaqListPage({ faq }: FaqListPageProps) {
                   value={form.answer}
                   onChange={(e) => setForm({ ...form, answer: e.target.value })}
                   rows={4}
-                  maxLength={100}
+                  maxLength={15}
                   placeholder="Harmony Home adalah..."
                 />
               </div>
