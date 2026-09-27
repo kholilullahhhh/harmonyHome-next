@@ -142,6 +142,8 @@ model MonthlyPayment {
 
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
 
+  reminders PaymentReminder[]
+
   @@unique([bookingId, periodYear, periodMonth])
   @@index([bookingId])
   @@index([status])
@@ -149,6 +151,25 @@ model MonthlyPayment {
   @@index([paidAt])
   @@index([periodYear, periodMonth])
   @@map("monthly_payments")
+}
+
+// One row per reminder stage that has actually been emailed
+// (H-3, H-1, Hari H) — the unique constraint is what makes
+// sending idempotent under concurrent triggers.
+model PaymentReminder {
+  id        String   @id @default(cuid())
+  paymentId String   @map("payment_id")
+  stage     String
+  email     String
+  sentAt    DateTime @default(now()) @map("sent_at")
+
+  payment MonthlyPayment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@unique([paymentId, stage])
+  @@index([paymentId])
+  @@index([stage])
+  @@index([sentAt])
+  @@map("payment_reminders")
 }
 
 // ── Contact Messages ──────────────────────────────────────

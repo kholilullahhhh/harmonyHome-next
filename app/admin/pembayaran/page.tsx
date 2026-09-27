@@ -1,4 +1,5 @@
 import { getMonthlyPayments, serializePayment } from '@/lib/db/monthly-payments';
+import { maybeRunPaymentReminders } from '@/lib/db/reminders';
 import { getAllRooms } from '@/lib/db/queries';
 import { businessDateString } from '@/lib/payment-dates';
 import { MonthlyPaymentsListPage } from '@/components/admin/MonthlyPaymentsListPage';
@@ -34,6 +35,8 @@ export default async function MonthlyPaymentsPage({ searchParams }: PaymentsPage
       limit: 15,
     }),
     getAllRooms(),
+    // Lazy reminder run (idempotent) alongside the list query.
+    maybeRunPaymentReminders(),
   ]);
 
   const currentYear = Number(businessDateString().slice(0, 4));

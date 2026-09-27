@@ -110,6 +110,13 @@ export function daysInMonth(year: number, month: number): number {
   return new Date(Date.UTC(year, month, 0)).getUTCDate();
 }
 
+/** Add (or subtract) days to a business date (noon-anchored, no timezone drift). */
+export function addDaysToDateOnly(value: DateOnly, days: number): DateOnly {
+  const { year, month, day } = parseDateOnly(value);
+  const target = new Date(Date.UTC(year, month - 1, day + days, 12));
+  return toDateString(target);
+}
+
 /** Whole days from `from` to `to` (positive when `to` is later). */
 export function daysBetween(from: DateOnly, to: DateOnly): number {
   const a = parseDateOnly(from);
