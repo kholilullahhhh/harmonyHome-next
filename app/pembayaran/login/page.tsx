@@ -1,9 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { signIn, getSession, signOut } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { getSession, signIn, signOut } from 'next-auth/react';
+import { Loader2, Eye, EyeOff, Home } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,19 +13,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 
 function sanitizeCallbackUrl(value: string | null): string {
   if (!value || !value.startsWith('/') || value.startsWith('//')) {
-    return '/admin';
+    return '/pembayaran';
   }
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : undefined;
+  const origin = typeof window !== 'undefined' ? window.location.origin : undefined;
   try {
     const url = new URL(value, origin);
     return url.pathname + url.search;
   } catch {
-    return '/admin';
+    return '/pembayaran';
   }
 }
 
-export default function AdminLoginPage() {
+export default function TenantLoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = sanitizeCallbackUrl(searchParams.get('callbackUrl'));
@@ -49,19 +49,20 @@ export default function AdminLoginPage() {
 
       if (result?.error) {
         setError('Email atau password salah.');
-      } else {
-        const session = await getSession();
-        const role = (session?.user as unknown as { role?: string } | undefined)?.role;
-
-        if (role === 'PENYEWA') {
-          await signOut({ redirect: false });
-          setError('Akun ini adalah akun penyewa. Silakan masuk dari halaman pembayaran.');
-          return;
-        }
-
-        router.push(callbackUrl);
-        router.refresh();
+        return;
       }
+
+      const session = await getSession();
+      const role = (session?.user as unknown as { role?: string } | undefined)?.role;
+
+      if (role !== 'PENYEWA') {
+        await signOut({ redirect: false });
+        setError('Akun ini bukan akun penyewa. Silakan masuk dari halaman admin.');
+        return;
+      }
+
+      router.push(callbackUrl);
+      router.refresh();
     } catch {
       setError('Terjadi kesalahan. Silakan coba lagi.');
     } finally {
@@ -70,11 +71,19 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-secondary/30 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-secondary/30 px-4 py-10">
       <Card className="w-full max-w-md border-border/60">
         <CardHeader className="text-center">
-          <CardTitle className="font-serif text-2xl">Harmony Home</CardTitle>
-          <CardDescription>Masuk ke admin dashboard</CardDescription>
+          <Link href="/" className="mx-auto mb-2 flex items-center justify-center gap-2">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <Home className="h-5 w-5" />
+            </span>
+            <span className="font-serif text-xl font-semibold">Harmony Home</span>
+          </Link>
+          <CardTitle className="font-serif text-2xl">Portal Penyewa</CardTitle>
+          <CardDescription>
+            Masuk untuk melihat tagihan dan tenggat pembayaran Anda.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -91,21 +100,21 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@harmonyhome.id"
+                placeholder="penyewa@email.com"
                 required
                 autoComplete="email"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Kata Sandi</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Masukkan password"
+                  placeholder="Masukkan kata sandi"
                   required
                   autoComplete="current-password"
                 />
@@ -113,6 +122,7 @@ export default function AdminLoginPage() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -129,11 +139,19 @@ export default function AdminLoginPage() {
                 'Masuk'
               )}
             </Button>
-            <div>
-              <p className="text-sm text-muted-foreground text-center">
-                Kembali ke <a href="/" className="text-primary underline">Beranda</a>
-              </p>
-            </div>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Belum punya akses?{' '}
+              <Link href="/kontak" className="text-primary underline">
+                Hubungi pengelola
+              </Link>
+            </p>
+            <p className="text-center text-sm text-muted-foreground">
+              Kembali ke{' '}
+              <Link href="/" className="text-primary underline">
+                Beranda
+              </Link>
+            </p>
           </form>
         </CardContent>
       </Card>

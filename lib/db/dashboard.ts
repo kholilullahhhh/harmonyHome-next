@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db/prisma';
+import { getMonthlyPaymentSummary } from '@/lib/db/monthly-payments';
 import { addMonths, differenceInDays, format, startOfMonth, subMonths } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 
@@ -531,6 +532,7 @@ export async function getDashboardData() {
     roomUtilization,
     recentActivity,
     notifications,
+    monthlyPayments,
   ] = await Promise.all([
     getDashboardStats(),
     getRevenueChartData(6),
@@ -543,6 +545,7 @@ export async function getDashboardData() {
     getRoomUtilization(),
     getRecentActivity(10),
     getNotifications(),
+    getMonthlyPaymentSummary(),
   ]);
 
   return {
@@ -557,5 +560,6 @@ export async function getDashboardData() {
     roomUtilization,
     recentActivity,
     notifications,
+    monthlyPayments,
   };
 }

@@ -16,6 +16,7 @@ import { Notifications } from '@/components/admin/dashboard/Notifications';
 import { UpcomingCheckins } from '@/components/admin/dashboard/UpcomingCheckins';
 import { UpcomingCheckouts } from '@/components/admin/dashboard/UpcomingCheckouts';
 import { PaymentOverview } from '@/components/admin/dashboard/PaymentOverview';
+import { MonthlyPaymentSummary } from '@/components/admin/dashboard/MonthlyPaymentSummary';
 import { ExpiringRentals } from '@/components/admin/dashboard/ExpiringRentals';
 import { RoomUtilization } from '@/components/admin/dashboard/RoomUtilization';
 
@@ -119,6 +120,16 @@ interface DashboardData {
     count: number;
     severity: 'info' | 'warning' | 'error';
   }[];
+  monthlyPayments: {
+    activeTenants: number;
+    paid: number;
+    unpaid: number;
+    dueToday: number;
+    overdue: number;
+    receivedThisMonth: number;
+    unpaidAmount: number;
+    periodLabel: string;
+  };
 }
 
 interface DashboardPageProps {
@@ -144,6 +155,9 @@ export function DashboardPage({ data }: DashboardPageProps) {
 
       {/* Stat Cards */}
       <StatCards stats={data.stats} />
+
+      {/* Monthly rent payments */}
+      <MonthlyPaymentSummary data={data.monthlyPayments} />
 
       {/* Revenue Chart + Occupancy */}
       <div className="grid gap-4 lg:grid-cols-3">

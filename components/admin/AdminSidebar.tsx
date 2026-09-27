@@ -18,6 +18,7 @@ import {
   Home,
   ChevronLeft,
   Users,
+  Wallet,
   Banknote,
   BarChart3,
 } from 'lucide-react';
@@ -71,6 +72,8 @@ const navGroups: NavGroup[] = [
   {
     label: 'Penghuni',
     items: [
+      { href: '/admin/penyewa', label: 'Penyewa', icon: Users },
+      { href: '/admin/pembayaran', label: 'Pembayaran', icon: Wallet },
       { href: '/admin/bookings', label: 'Booking', icon: CalendarCheck },
     ],
   },

@@ -1,5 +1,15 @@
 import { PrismaClient, UserRole, RoomStatus, BookingStatus } from '@prisma/client';
 import { hash } from 'bcryptjs';
+import {
+  addMonthsToDateOnly,
+  businessDateString,
+  calculatePaymentStatus,
+  getDurationMonths,
+  getMonthlyAmount,
+  planBillingPeriods,
+  toAnchorDate,
+  toDateString,
+} from '../lib/payment-dates';
 
 const prisma = new PrismaClient();
 
@@ -293,6 +303,158 @@ async function main() {
       ],
     });
     console.log('Sample bookings seeded');
+  }
+
+  // ── Monthly-payment demo bookings ───────────────────
+  // Extra active tenants cover every display state: paid, overdue,
+  // not-yet-due (the original seed adds pending and completed bookings).
+  const today = businessDateString();
+
+  if (existingBookings === 0) {
+    const firstOfPreviousMonth = addMonthsToDateOnly(`${today.slice(0, 7)}-01`, -1);
+
+    await prisma.booking.createMany({
+      data: [
+        {
+          // Due on the 1st of each month → already late today.
+          bookingCode: 'HH-2026-0004',
+          roomId: standard.id,
+          name: 'Sinta Dewi',
+          email: 'sinta@email.com',
+          phone: '081398765432',
+          identityNumber: '7371015504980003',
+          address: 'Jl. Antang Raya No. 5, Makassar',
+          startDate: new Date(firstOfPreviousMonth),
+          duration: 6,
+          durationUnit: 'month',
+          totalPrice: 10200000,
+          status: BookingStatus.CONFIRMED,
+          paymentDueDay: 1,
+        },
+        {
+          // Due on the 31st (clamped to the last day of the month) → not due yet.
+          bookingCode: 'HH-2026-0005',
+          roomId: premium.id,
+          name: 'Rangga Saputra',
+          email: 'rangga@email.com',
+          phone: '082198765432',
+          identityNumber: '7371016605970004',
+          address: 'Jl. Pengayoman Blok C No. 3, Makassar',
+          startDate: new Date(`${today}T00:00:00Z`),
+          duration: 6,
+          durationUnit: 'month',
+          totalPrice: 12000000,
+          status: BookingStatus.CONFIRMED,
+          paymentDueDay: 31,
+        },
+        {
+          // Bills get marked paid below → the "sudah dibayar" example.
+          bookingCode: 'HH-2026-0006',
+          roomId: executive.id,
+          name: 'Lina Marlina',
+          email: 'lina@email.com',
+          phone: '083109876543',
+          identityNumber: '7371014706960005',
+          address: 'Jl. Toddopuli Raya No. 12, Makassar',
+          startDate: new Date(firstOfPreviousMonth),
+          duration: 6,
+          durationUnit: 'month',
+          totalPrice: 15000000,
+          status: BookingStatus.CONFIRMED,
+          paymentDueDay: 5,
+        },
+      ],
+    });
+    console.log('Payment demo bookings seeded');
+  }
+
+  // ── Tenant accounts + due days ──────────────────────
+  const tenantPasswordHash = await hash('penyewa123', 12);
+  const allBookings = await prisma.booking.findMany({ orderBy: { startDate: 'asc' } });
+
+  for (const booking of allBookings) {
+    const updates: { paymentDueDay?: number; userId?: string } = {};
+
+    // Default the due day to the move-in day so admins can see and edit it.
+    if (booking.paymentDueDay == null) {
+      updates.paymentDueDay = booking.startDate.getUTCDate();
+    }
+
+    let tenant = await prisma.user.findUnique({ where: { email: booking.email } });
+    if (!tenant) {
+      tenant = await prisma.user.create({
+        data: {
+          name: booking.name,
+          email: booking.email,
+          passwordHash: tenantPasswordHash,
+          role: UserRole.PENYEWA,
+        },
+      });
+    }
+    // Never point a booking at an admin/staff account.
+    if (tenant.role === UserRole.PENYEWA && booking.userId !== tenant.id) {
+      updates.userId = tenant.id;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await prisma.booking.update({ where: { id: booking.id }, data: updates });
+    }
+  }
+  console.log('Tenant accounts seeded (password: penyewa123)');
+
+  // ── Monthly bills for active tenants ────────────────
+  // Same rules as the app: only confirmed tenants still inside their
+  // contract generate bills; re-running never duplicates a row.
+  const confirmedBookings = allBookings.filter((booking) => {
+    if (booking.status !== BookingStatus.CONFIRMED) return false;
+    const start = toDateString(booking.startDate);
+    const end = addMonthsToDateOnly(
+      start,
+      getDurationMonths(booking.duration, booking.durationUnit)
+    );
+    return today >= start && today < end;
+  });
+
+  for (const booking of confirmedBookings) {
+    const rows = planBillingPeriods(booking, today).map((period) => ({
+      bookingId: booking.id,
+      periodYear: period.year,
+      periodMonth: period.month,
+      amount: getMonthlyAmount(booking),
+      dueDate: toAnchorDate(period.dueDate),
+      status: calculatePaymentStatus({ paidAt: null, dueDate: period.dueDate, today }),
+    }));
+
+    if (rows.length > 0) {
+      await prisma.monthlyPayment.createMany({ data: rows, skipDuplicates: true });
+    }
+  }
+  console.log(`Monthly bills seeded (${confirmedBookings.length} active tenants)`);
+
+  // ── Paid demo bills ─────────────────────────────────
+  if (existingBookings === 0) {
+    const paidBooking = await prisma.booking.findUnique({
+      where: { bookingCode: 'HH-2026-0006' },
+    });
+
+    if (paidBooking) {
+      const bills = await prisma.monthlyPayment.findMany({
+        where: { bookingId: paidBooking.id, paidAt: null },
+      });
+
+      for (const bill of bills) {
+        await prisma.monthlyPayment.update({
+          where: { id: bill.id },
+          data: {
+            status: 'PAID',
+            paidAt: toAnchorDate(toDateString(bill.dueDate)),
+            paymentMethod: 'TRANSFER',
+            notes: 'Pembayaran transfer via bank',
+          },
+        });
+      }
+      console.log(`Demo paid bills seeded (${bills.length})`);
+    }
   }
 
   console.log('Seed completed!');

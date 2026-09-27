@@ -15,6 +15,7 @@ const navLinks = [
 
 const legalLinks = [
   { href: '/aturan', label: 'Aturan Kost' },
+  { href: '/pembayaran', label: 'Cek Tagihan' },
   { href: '/kontak', label: 'Kontak' },
 ];
 
